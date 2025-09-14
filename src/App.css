@@ -1,0 +1,122 @@
+.App {
+  text-align: center;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid gray;
+  background-color: #0e0e0f;
+  color: white;
+  z-index: 999; /* 가장 위에 배치 */
+}
+
+
+.lost-board{
+  text-align: left;
+  margin-left: 3px;
+  margin-right: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+.menu{
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.menu:hover{
+  background-color: white;
+  color: black;
+}
+
+.content {
+  margin-top: 60px; /* navbar 높이 */
+  padding: 20px;
+  padding-top: 100px;
+  background-color: #1f2125;
+  color: white;
+  height: calc(100vh - 60px); /* navbar 제외한 높이 */
+  overflow-y: auto; /* 스크롤 가능 */
+  z-index: 1; /* sidebar와 navbar보다 아래 */
+  position: relative;
+  box-sizing: border-box;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.calculation-box{
+  background-color: white;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+}
+
+.headcount{
+  padding: 5px;
+}
+
+.headcount>button{
+  padding: 5px 14px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #282c34;
+  color: white;
+}
+
+.headcount>button:hover{
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
