@@ -40,27 +40,63 @@ function App() {
           path="/"
           element={
             <div className="content">
-              {/* 텍스트 필드 */}
-              <TextField
-                id="standard-basic"
-                label="캐릭터명"
-                variant="standard"
-                value={characterName}
-                onChange={handleInputChange}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    handleSearch(); // Enter 키 입력 시 검색 실행
-                  }
-                }}
-              />
-              {/* 검색 버튼 */}
-              <Button
-                variant="contained"
-                style={{ marginTop: "11px", marginLeft: "8px" }}
-                onClick={handleSearch}
-              >
-                검색
-              </Button>
+              <div className="home-content">
+                <h1 className="home-title">LostBoard</h1>
+                <p className="home-subtitle">
+                  Lost Ark 플레이어를 위한 레이드 효율성 분석 도구<br/>
+                </p>
+                
+                <div className="search-container">
+                  <div className="search-input-wrapper">
+                    <TextField
+                      id="character-search"
+                      label="캐릭터명"
+                      variant="outlined"
+                      value={characterName}
+                      onChange={handleInputChange}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          handleSearch();
+                        }
+                      }}
+                      fullWidth
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          backgroundColor: 'var(--bg-tertiary)',
+                          color: 'var(--text-primary)',
+                          borderRadius: '12px',
+                          '& fieldset': {
+                            borderColor: 'var(--border-color)',
+                            borderWidth: '2px',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'var(--primary-gold)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'var(--primary-gold)',
+                            boxShadow: '0 0 10px var(--primary-gold-glow)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'var(--text-secondary)',
+                          '&.Mui-focused': {
+                            color: 'var(--primary-gold)',
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+                  
+                  <Button
+                    variant="contained"
+                    className="search-button"
+                    onClick={handleSearch}
+                    size="large"
+                  >
+                    🔍 검색하기
+                  </Button>
+                </div>
+              </div>
             </div>
           }
         />

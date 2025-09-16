@@ -37,6 +37,9 @@ function Board() {
 
   // 필터링: ItemAvgLevel이 1370.00 이하인 객체 제거
   const filteredData = characterData.filter(item => {
+    // item과 ItemAvgLevel이 존재하는지 확인
+    if (!item || !item.ItemAvgLevel) return false;
+    
     const itemLevel = parseFloat(item.ItemAvgLevel.replace(/,/g, ""));
     itemLevelArr.push(itemLevel); // itemLevel 값 저장
     return itemLevel >= 1370.00; // 1370.00 이상만 포함
@@ -205,6 +208,28 @@ function Board() {
 
     return groupSelectedCount + individualSelectedCount;
   };
+
+  // 로딩 상태 처리
+  if (characterData.length === 0) {
+    return (
+      <div className='content'>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <div>캐릭터 정보를 불러오는 중...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // 필터링된 데이터가 없는 경우
+  if (filteredData.length === 0) {
+    return (
+      <div className='content'>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <div>1370 이상의 캐릭터가 없습니다.</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='content'>
