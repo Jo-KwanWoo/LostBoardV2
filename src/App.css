@@ -1,5 +1,40 @@
+/* Lost Ark 테마 색상 팔레트 */
+:root {
+  /* Primary Colors - Lost Ark Gold Theme */
+  --primary-gold: #D4AF37;
+  --primary-gold-light: #F4E4BC;
+  --primary-gold-dark: #B8941F;
+  --primary-gold-glow: rgba(212, 175, 55, 0.3);
+  
+  /* Background Colors */
+  --bg-primary: #0A0A0B;
+  --bg-secondary: #1A1B1E;
+  --bg-tertiary: #2A2B2E;
+  --bg-card: #1E1F22;
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B3B8;
+  --text-muted: #8A8B8F;
+  
+  /* Accent Colors */
+  --accent-blue: #4A9EFF;
+  --accent-purple: #8B5CF6;
+  --accent-green: #10B981;
+  --accent-red: #EF4444;
+  
+  /* Border & Shadow */
+  --border-color: #3A3B3E;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-gold: 0 0 20px var(--primary-gold-glow);
+}
+
 .App {
   text-align: center;
+  background: var(--bg-primary);
+  min-height: 100vh;
 }
 
 body {
@@ -8,20 +43,25 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .navbar {
-  height: 60px;
+  height: 70px;
   width: 100%;
   display: flex;
   align-items: center;
   position: fixed;
   top: 0;
   left: 0;
-  border-bottom: 1px solid gray;
-  background-color: #0e0e0f;
-  color: white;
-  z-index: 999; /* 가장 위에 배치 */
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--primary-gold);
+  color: var(--text-primary);
+  z-index: 999;
+  box-shadow: var(--shadow-medium);
 }
 
 
@@ -34,30 +74,132 @@ body {
   cursor: pointer;
 }
 
-.menu{
-  padding: 10px 20px;
-  border-radius: 4px;
+.menu {
+  padding: 12px 24px;
+  border-radius: 8px;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.15s;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.menu:hover{
-  background-color: white;
-  color: black;
+.menu:hover {
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-light));
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+  border-color: var(--primary-gold-light);
+}
+
+.menu::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary-gold);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.menu:hover::before {
+  width: 80%;
 }
 
 .content {
-  margin-top: 60px; /* navbar 높이 */
-  padding: 20px;
-  padding-top: 100px;
-  background-color: #1f2125;
-  color: white;
-  height: calc(100vh - 60px); /* navbar 제외한 높이 */
-  overflow-y: auto; /* 스크롤 가능 */
-  z-index: 1; /* sidebar와 navbar보다 아래 */
+  margin-top: 70px; /* navbar 높이 증가에 맞춤 */
+  padding: 40px 20px;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+  color: var(--text-primary);
+  min-height: calc(100vh - 70px);
+  overflow-y: auto;
+  z-index: 1;
   position: relative;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 초기화면 전용 스타일 */
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.home-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 30px var(--primary-gold-glow);
+  letter-spacing: 2px;
+}
+
+.home-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 2px solid var(--border-color);
+  box-shadow: var(--shadow-heavy);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  min-width: 400px;
+}
+
+.search-container:hover {
+  border-color: var(--primary-gold);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-5px);
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-button {
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-dark)) !important;
+  color: var(--bg-primary) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 12px 30px !important;
+  border-radius: 25px !important;
+  border: none !important;
+  box-shadow: var(--shadow-medium) !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-gold) !important;
+  background: linear-gradient(135deg, var(--primary-gold-light), var(--primary-gold)) !important;
 }
 
 .App-logo {
@@ -118,5 +260,61 @@ body {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .navbar {
+    height: 60px;
+    padding: 0 15px;
+  }
+  
+  .content {
+    margin-top: 60px;
+    padding: 20px 15px;
+  }
+  
+  .home-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .home-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    padding: 0 20px;
+  }
+  
+  .search-container {
+    min-width: auto;
+    width: 100%;
+    max-width: 350px;
+    padding: 30px 20px;
+  }
+  
+  .menu {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-title {
+    font-size: 2rem;
+  }
+  
+  .search-container {
+    padding: 25px 15px;
+  }
+  
+  .navbar {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 60px;
+  }
+  
+  .lost-board {
+    width: 8%;
   }
 }

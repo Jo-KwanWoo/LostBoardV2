@@ -5,7 +5,9 @@ import Raid from "./Data";
 import raidClearReward from "./raidClearReward";
 
 function Material(props) {
-  const itemLevel = parseFloat(props.characterInfo.ItemMaxLevel.replace(/,/g, ""));
+  // props.characterInfo가 없거나 ItemMaxLevel이 없는 경우 기본값 설정
+  const itemLevelString = props.characterInfo?.ItemMaxLevel || "0";
+  const itemLevel = parseFloat(itemLevelString.replace(/,/g, ""));
   const [material, setMaterial] = useState([]);
   const previousCheckedValues = useRef({}); // 이전 체크 상태 저장
   const previousAdditionalCheckedValues = useRef({});
@@ -130,6 +132,11 @@ function Material(props) {
   function goldReward(raidIndex) {
     if (!Raid[raidIndex] || !Raid[raidIndex].clearGold) return 0; // 유효성 검증 추가
     return Raid[raidIndex].clearGold.reduce((acc, gold) => acc + gold, 0);
+  }
+
+  // props 유효성 검사
+  if (!props.characterInfo) {
+    return <div>캐릭터 정보를 불러오는 중...</div>;
   }
 
   return (
