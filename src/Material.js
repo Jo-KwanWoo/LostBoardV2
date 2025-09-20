@@ -1,52 +1,101 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { level1370Full, level1490Full, level1580Full, level1640Full } from "./materialListByLevelFull";
-import {level1370Light, level1490Light, level1580Light, level1640Light} from "./materialListByLevelLight"
+import { level1370Light, level1490Light, level1580Light, level1640Light } from "./materialListByLevelLight"
 import Raid from "./Data";
 import raidClearReward from "./raidClearReward";
 
 function Material(props) {
-  // props.characterInfo가 없거나 ItemMaxLevel이 없는 경우 기본값 설정
-  const itemLevelString = props.characterInfo?.ItemMaxLevel || "0";
+  // props.characterInfo가 없거나 ItemAvgLevel이 없는 경우 기본값 설정
+  const itemLevelString = props.characterInfo?.ItemAvgLevel || "0";
   const itemLevel = parseFloat(itemLevelString.replace(/,/g, ""));
   const [material, setMaterial] = useState([]);
   const previousCheckedValues = useRef({}); // 이전 체크 상태 저장
   const previousAdditionalCheckedValues = useRef({});
   const previousGoldCheckedValues = useRef({});
 
-  //아이템 레벨에 따른 초기 재료 설정
-  useEffect(() => {
-    if(props.tierMaterialSwitch === true){
+  console.log('Material Debug:', {
+    characterName: props.characterInfo?.CharacterName,
+    itemLevelString,
+    itemLevel,
+    tierMaterialSwitch: props.tierMaterialSwitch
+  });
+
+  // 기본 재료 템플릿 가져오기
+  const getBaseMaterial = useCallback(() => {
+    console.log('getBaseMaterial called:', { itemLevel, tierMaterialSwitch: props.tierMaterialSwitch });
+
+    if (props.tierMaterialSwitch === true) {
       if (itemLevel >= 1640) {
-        setMaterial(level1640Light);
+        console.log('Using level1640Light');
+        return [...level1640Light];
       } else if (itemLevel >= 1580) {
-        setMaterial(level1580Light);
+        console.log('Using level1580Light');
+        return [...level1580Light];
       } else if (itemLevel >= 1490) {
-        setMaterial(level1490Light);
+        console.log('Using level1490Light');
+        return [...level1490Light];
       } else {
-        setMaterial(level1370Light);
+        console.log('Using level1370Light');
+        return [...level1370Light];
       }
-    }else if(props.tierMaterialSwitch === false){
+    } else {
       if (itemLevel >= 1640) {
-        setMaterial(level1640Full);
+        console.log('Using level1640Full');
+        return [...level1640Full];
       } else if (itemLevel >= 1580) {
-        setMaterial(level1580Full);
+        console.log('Using level1580Full');
+        return [...level1580Full];
       } else if (itemLevel >= 1490) {
-        setMaterial(level1490Full);
+        console.log('Using level1490Full');
+        return [...level1490Full];
       } else {
-        setMaterial(level1370Full);
+        console.log('Using level1370Full');
+        return [...level1370Full];
       }
     }
   }, [itemLevel, props.tierMaterialSwitch]);
 
+  // 초기 재료 설정 및 템플릿 변경 처리
+  useEffect(() => {
+    const baseMaterial = getBaseMaterial();
+
+    if (material.length === 0) {
+      // 첫 로딩 시
+      console.log('Initial material setup');
+      setMaterial(baseMaterial);
+    } else {
+      // 템플릿 변경 시 기존 재료의 변경사항을 새 템플릿에 적용
+      console.log('Updating material template');
+      const updatedMaterial = baseMaterial.map(baseItem => {
+        const existingItem = material.find(item =>
+          Object.keys(item)[0] === Object.keys(baseItem)[0]
+        );
+
+        if (existingItem) {
+          const key = Object.keys(baseItem)[0];
+          const baseValue = baseItem[key];
+          const existingValue = existingItem[key];
+          const difference = existingValue - baseValue;
+
+          return { [key]: baseValue + difference };
+        }
+
+        return { ...baseItem };
+      });
+
+      setMaterial(updatedMaterial);
+    }
+  }, [getBaseMaterial]);
+
   // 레이드 클리어 보상, 더보기 보상, 골드 보상 통합 관리 함수
   const processRaidUpdates = (checkedValues, previousCheckedValues, updateFunction, rewardFunction, rewardType) => {
     if (!props.raidAndDiff || !Object.keys(props.raidAndDiff).length) return;
-  
+
     const raidName = Object.keys(props.raidAndDiff)[0];
     const diff = props.raidAndDiff[raidName];
     let index = null;
     let raidLevel = null;
-  
+
     for (let i = 0; i < Raid.length; i++) {
       if (Raid[i].RaidName === raidName && Raid[i].RaidDifficulty === diff) {
         index = i;
@@ -54,28 +103,28 @@ function Material(props) {
         break;
       }
     }
-  
+
     if (raidLevel && index !== null) {
       // 보상 타입에 따른 함수 처리. rewardType === '골드' 인 경우 goldReward()함수를 실행.
       // rewardType === '클리어 재료' || '더보기 재료' 인 경우 raidClearReward()함수를 실행.
       const updates = rewardType === '골드' ? { 골드: rewardFunction(index) } : rewardFunction(raidLevel, index, rewardType);
       const prevChecked = previousCheckedValues.current || {};
       const currentChecked = checkedValues || {};
-  
+
       // 이전 상태와 비교하여 다른 것만 변경
       Object.keys(currentChecked).forEach((key) => {
         const isCheckedBefore = prevChecked[key] || false;
         const isCheckedNow = currentChecked[key] || false;
-  
+
         if (isCheckedBefore !== isCheckedNow) {
           updateFunction(updates, isCheckedNow);
         }
       });
-  
+
       previousCheckedValues.current = { ...currentChecked };
     }
   };
-  
+
   // props.checkedValues 처리
   useEffect(() => {
     processRaidUpdates(
@@ -97,7 +146,7 @@ function Material(props) {
       '더보기 재료' // 더보기 재료 처리
     );
   }, [props.additionalCheckedValues]);
-  
+
   // props.goldCheckboxes 처리
   useEffect(() => {
     processRaidUpdates(
@@ -141,6 +190,11 @@ function Material(props) {
 
   return (
     <div>
+      {/* 디버그 정보 */}
+      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
+        레벨: {itemLevel} | 템플릿: {itemLevel >= 1640 ? '1640+' : itemLevel >= 1580 ? '1580+' : itemLevel >= 1490 ? '1490+' : '1370+'}
+      </div>
+
       {/* 재료 및 골드 출력 */}
       {material.map((a, i) => (
         <div key={i}>

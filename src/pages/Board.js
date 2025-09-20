@@ -1,14 +1,19 @@
 import '../App.css'
 import { useSelector } from 'react-redux';
-import Grid from '@mui/material/Grid2';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import { 
+  Container, 
+  Typography, 
+  Switch, 
+  FormControlLabel, 
+  Box,
+  Fade
+} from '@mui/material';
 import instance from '../instance';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import Raid from '../Data';
-import DifficultySelect from '../DifficultySelect';
 import Material from '../Material';
+import CharacterCard from '../components/CharacterCard';
+import RaidItem from '../components/RaidItem';
 
 function Board() {
   let state = useSelector((state) => state.characterName);
@@ -231,141 +236,200 @@ function Board() {
     );
   }
 
+  // 난이도 옵션 가져오기
+  const getDifficultyOptions = (raidName, characterIndex) => {
+    if (!filterRaidByItemLevel[characterIndex]) return [];
+    
+    // 해당 레이드의 모든 난이도 옵션들을 찾기
+    const raidOptions = filterRaidByItemLevel[characterIndex]
+      .filter(raid => raid.RaidName === raidName)
+      .map(raid => raid.RaidDifficulty);
+    
+    // 중복 제거하고 정렬 (hard, normal, single 순서)
+    const uniqueDifficulties = [...new Set(raidOptions)];
+    const sortOrder = { 'hard': 1, 'normal': 2, 'single': 3 };
+    
+    return uniqueDifficulties.sort((a, b) => (sortOrder[a] || 999) - (sortOrder[b] || 999));
+  };
+
   return (
     <div className='content'>
-      <FormControlLabel control={<Switch defaultChecked checked={tierMaterialSwitch}
-      onChange={handleTierMaterialSwitch}/>} 
-      label="티어에 맞는 재료 보기"/>
-      {
-        sortedData.map((characterInfo, characterIndex) => (
-          <Grid container spacing={3} key={characterIndex}>
-            <Grid size="grow">
-              <img src={`${process.env.PUBLIC_URL}/class_logo/${characterInfo.CharacterClassName}.png`}
-                width="30%" alt={characterInfo.CharacterClassName} />
-              <p>{characterInfo.CharacterClassName}</p>
-              <p>{characterInfo.CharacterName}</p>
-              <p>{characterInfo.ItemMaxLevel}</p>
-            </Grid>
-            <Grid size="grow" marginBottom='80px'>
-              {
-                filteredRaidName[characterIndex]
-                  .slice(0, showAll[characterIndex] ? filteredRaidName[characterIndex].length : 5)
-                  .map((raidName, raidIndex) => {
-                    const groupName = Object.keys(groupMapping).find((group) =>
-                      groupMapping[group].includes(raidName)
-                    );
+      <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* 헤더 영역 */}
+        <Box sx={{ marginBottom: '32px', textAlign: 'center' }}>
+          <Typography 
+            variant="h4" 
+            sx={{ 
+              color: 'var(--text-primary)', 
+              fontWeight: 'bold',
+              marginBottom: '16px',
+              background: 'linear-gradient(135deg, var(--primary-gold), var(--primary-gold-light))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
+          >
+            레이드 현황판
+          </Typography>
+          
+          <FormControlLabel 
+            control={
+              <Switch 
+                checked={tierMaterialSwitch}
+                onChange={handleTierMaterialSwitch}
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': {
+                    color: 'var(--primary-gold)',
+                  },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: 'var(--primary-gold)',
+                  },
+                }}
+              />
+            } 
+            label={
+              <Typography sx={{ color: 'var(--text-secondary)' }}>
+                티어에 맞는 재료 보기
+              </Typography>
+            }
+          />
+        </Box>
 
-                    // 현재 그룹 내 체크박스 중 하나라도 선택되었는지 확인
-                    const isGroupSelected = groupName
-                      ? groupMapping[groupName].some((name) =>
-                        goldCheckboxes[characterIndex]?.[
-                        filteredRaidName[characterIndex].indexOf(name)
-                        ]
-                      )
-                      : false;
-
-                    // 선택된 체크박스 개수 계산
-                    const selectedCount = countSelectedCheckboxes(characterIndex);
-
-                    // 체크박스 비활성화 조건
-                    const isDisabled =
-                      !goldCheckboxes[characterIndex]?.[raidIndex] &&
-                      !isGroupSelected &&
-                      selectedCount >= 3;
-
-
-                    // "더보기" 체크박스 활성화 조건
-                    const isAdditionalCheckboxDisabled =
-                      !checkedValues[characterIndex]?.[raidIndex];
-
-
-                    return (
-                      <div
-                        key={raidIndex}
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                      >
-                        <Checkbox
-                          checked={checkedValues[characterIndex]?.[raidIndex] || false}
-                          onChange={(e) =>
-                            handleCheckboxChange(e, characterIndex, raidIndex)
-                          }
-                        />
-                        <span>{raidName}</span>
-                        <select
-                          name="difficulty"
-                          label="난이도"
-                          onChange={(e) =>
-                            handleSelectChange(e, characterIndex, raidIndex)
-                          }
-                        >
-                          <DifficultySelect
-                            raidName={raidName}
-                            filterRaidByItemLevel={filterRaidByItemLevel}
-                            characterIndex={characterIndex}
-                            raidIndex={raidIndex}
-                          />
-                        </select>
-                        <img src={`${process.env.PUBLIC_URL}/items/Gold.webp`}
-                          width="5%" alt={characterInfo.CharacterClassName} />
-                        <Checkbox
-                          checked={goldCheckboxes[characterIndex]?.[raidIndex] || false}
-                          onChange={(e) =>
-                            handleGoldCheckboxChange(e, characterIndex, raidIndex)
-                          }
-                          disabled={isDisabled} // 선택 제한 조건 적용
-                        />
-                        <span>더보기</span>
-                        <Checkbox
-                          checked={additionalCheckedValues[characterIndex]?.[raidIndex] || false} // "더보기" 체크박스 초기값 설정 (필요시 상태로 관리 가능)
-                          onChange={(e) => handleAdditionalCheckboxChange(e, characterIndex, raidIndex)} // "더보기" 체크박스의 핸들러
-                          disabled={isAdditionalCheckboxDisabled} // checkedValues가 선택되어야 활성화
-                        />
-                        
-                      </div>
-                    );
-                  })
-              }
-
-              {/* "더보기/접어두기" 버튼 */}
-              {filteredRaidName[characterIndex].length > 6 && (
-                <button
-                  onClick={() =>
-                    setShowAll((prev) => ({
-                      ...prev,
-                      [characterIndex]: !prev[characterIndex], // 특정 캐릭터 상태 토글
-                    }))
-                  }
-                  style={{
-                    marginTop: '10px',
-                    padding: '5px 10px',
-                    backgroundColor: '#007bff',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {showAll[characterIndex] ? "접어두기" : "더보기"}
-                </button>
-              )}
-            </Grid>
-            <Grid size="grow">
-              <div key={characterIndex}>
-                <Material
-                  characterInfo={characterInfo}
-                  checkedValues={checkedValues[characterIndex] || {}}
+        {/* 캐릭터 목록 */}
+        <Box 
+          sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(3, 1fr)', 
+            gap: '20px',
+            justifyItems: 'center',
+            alignItems: 'start',
+            width: '100%',
+            maxWidth: '1400px',
+            margin: '0 auto',
+            '@media (max-width: 1400px)': {
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              maxWidth: '900px',
+            },
+            '@media (max-width: 768px)': {
+              gridTemplateColumns: '1fr',
+              maxWidth: '500px',
+            }
+          }}
+        >
+          {sortedData.map((characterInfo, characterIndex) => (
+            <Fade in={true} timeout={300 + characterIndex * 100} key={characterIndex}>
+              <Box>
+                <CharacterCard 
+                  characterInfo={characterInfo} 
                   characterIndex={characterIndex}
-                  raidAndDiff={raidAndDiff}
-                  goldCheckboxes={goldCheckboxes[characterIndex] || {}}
-                  additionalCheckedValues={additionalCheckedValues[characterIndex] || {}}
-                  filteredRaidName={filteredRaidName}
-                  tierMaterialSwitch = {tierMaterialSwitch} />
-              </div>
+                >
+                {/* 레이드 목록 */}
+                <Box sx={{ marginBottom: '20px' }}>
+                  {filteredRaidName[characterIndex]
+                    ?.slice(0, showAll[characterIndex] ? filteredRaidName[characterIndex].length : 5)
+                    .map((raidName, raidIndex) => {
+                      const groupName = Object.keys(groupMapping).find((group) =>
+                        groupMapping[group].includes(raidName)
+                      );
 
-            </Grid>
-          </Grid>
-        ))
-      }
+                      const isGroupSelected = groupName
+                        ? groupMapping[groupName].some((name) =>
+                            goldCheckboxes[characterIndex]?.[
+                              filteredRaidName[characterIndex].indexOf(name)
+                            ]
+                          )
+                        : false;
+
+                      const selectedCount = countSelectedCheckboxes(characterIndex);
+                      const isGoldDisabled = 
+                        !goldCheckboxes[characterIndex]?.[raidIndex] &&
+                        !isGroupSelected &&
+                        selectedCount >= 3;
+
+                      const isAdditionalDisabled = !checkedValues[characterIndex]?.[raidIndex];
+
+                      return (
+                        <RaidItem
+                          key={raidIndex}
+                          raidName={raidName}
+                          isChecked={checkedValues[characterIndex]?.[raidIndex] || false}
+                          isGoldSelected={goldCheckboxes[characterIndex]?.[raidIndex] || false}
+                          isAdditionalSelected={additionalCheckedValues[characterIndex]?.[raidIndex] || false}
+                          isGoldDisabled={isGoldDisabled}
+                          isAdditionalDisabled={isAdditionalDisabled}
+                          difficulty={selectValues[`${characterIndex}-${raidIndex}`] || getDifficultyOptions(raidName, characterIndex)[0]}
+                          difficulties={getDifficultyOptions(raidName, characterIndex)}
+                          onRaidToggle={(e) => handleCheckboxChange(e, characterIndex, raidIndex)}
+                          onGoldToggle={(e) => handleGoldCheckboxChange(e, characterIndex, raidIndex)}
+                          onAdditionalToggle={(e) => handleAdditionalCheckboxChange(e, characterIndex, raidIndex)}
+                          onDifficultyChange={(e) => handleSelectChange(e, characterIndex, raidIndex)}
+                        />
+                      );
+                    })}
+                </Box>
+
+                {/* 더보기/접어두기 버튼 */}
+                {filteredRaidName[characterIndex]?.length > 5 && (
+                  <Box sx={{ textAlign: 'center', marginTop: '12px' }}>
+                    <button
+                      onClick={() =>
+                        setShowAll((prev) => ({
+                          ...prev,
+                          [characterIndex]: !prev[characterIndex],
+                        }))
+                      }
+                      style={{
+                        padding: '8px 16px',
+                        background: 'linear-gradient(135deg, var(--primary-gold), var(--primary-gold-dark))',
+                        color: 'var(--bg-primary)',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        fontSize: '0.85rem',
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      {showAll[characterIndex] ? "접어두기" : "더보기"}
+                    </button>
+                  </Box>
+                )}
+
+                {/* 재료 정보 */}
+                <Box sx={{ 
+                  marginTop: '16px', 
+                  padding: '16px',
+                  background: 'var(--bg-tertiary)',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-color)'
+                }}>
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      color: 'var(--primary-gold)', 
+                      marginBottom: '12px',
+                      fontWeight: 'bold',
+                      fontSize: '1rem'
+                    }}
+                  >
+                    획득 재료
+                  </Typography>
+                  <Material
+                    characterInfo={characterInfo}
+                    checkedValues={checkedValues[characterIndex] || {}}
+                    characterIndex={characterIndex}
+                    raidAndDiff={raidAndDiff}
+                    goldCheckboxes={goldCheckboxes[characterIndex] || {}}
+                    additionalCheckedValues={additionalCheckedValues[characterIndex] || {}}
+                    filteredRaidName={filteredRaidName}
+                    tierMaterialSwitch={tierMaterialSwitch}
+                  />
+                </Box>
+              </CharacterCard>
+              </Box>
+            </Fade>
+          ))}
+        </Box>
+      </Container>
     </div>
   )
 }

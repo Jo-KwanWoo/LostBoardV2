@@ -263,6 +263,121 @@ body {
   }
 }
 
+/* 현황판 전용 스타일 */
+.board-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.board-title {
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.character-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.character-card:hover {
+  border-color: var(--primary-gold);
+  box-shadow: var(--shadow-gold);
+  transform: translateY(-4px);
+}
+
+.character-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-gold), var(--primary-gold-light));
+  border-radius: 16px 16px 0 0;
+}
+
+.raid-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  margin: 8px 0;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.raid-item:hover {
+  border-color: var(--primary-gold);
+  transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+}
+
+.raid-item.checked {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+  border-color: var(--primary-gold);
+}
+
+.raid-item.checked::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--primary-gold), var(--primary-gold-light));
+}
+
+.material-section {
+  margin-top: 24px;
+  padding: 20px;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.material-title {
+  color: var(--primary-gold);
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+/* 로딩 애니메이션 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  text-align: center;
+}
+
+.loading-spinner {
+  border: 3px solid var(--bg-tertiary);
+  border-top: 3px solid var(--primary-gold);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .navbar {
@@ -297,6 +412,21 @@ body {
     padding: 8px 16px;
     font-size: 14px;
   }
+  
+  .character-card {
+    margin-bottom: 16px;
+  }
+  
+  .raid-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .material-section {
+    padding: 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -316,5 +446,13 @@ body {
   
   .lost-board {
     width: 8%;
+  }
+  
+  .board-title {
+    font-size: 1.8rem;
+  }
+  
+  .character-card {
+    padding: 16px;
   }
 }
