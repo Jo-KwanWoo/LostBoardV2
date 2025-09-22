@@ -5,7 +5,6 @@ import {
   Typography,
   Switch,
   FormControlLabel,
-  Box,
   Fade
 } from '@mui/material';
 import instance from '../instance';
@@ -218,7 +217,7 @@ function Board() {
   if (characterData.length === 0) {
     return (
       <div className='content'>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
+        <div className='board-loading'>
           <div>캐릭터 정보를 불러오는 중...</div>
         </div>
       </div>
@@ -229,7 +228,7 @@ function Board() {
   if (filteredData.length === 0) {
     return (
       <div className='content'>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
+        <div className='board-no-characters'>
           <div>1370 이상의 캐릭터가 없습니다.</div>
         </div>
       </div>
@@ -254,14 +253,15 @@ function Board() {
 
   return (
     <div className='content'>
-      <Container maxWidth="xl" className="board-container">
+      <Container maxWidth="xl" className='board-container'>
         {/* 헤더 영역 */}
-        <Box className="board-header">
-          <Typography variant="h4" className="board-title-enhanced">
+        <div className='board-header'>
+          <Typography variant="h4" className='board-title'>
             레이드 현황판
           </Typography>
 
           <FormControlLabel
+            className='board-switch-container'
             control={
               <Switch
                 checked={tierMaterialSwitch}
@@ -277,24 +277,24 @@ function Board() {
               />
             }
             label={
-              <Typography className="board-switch-label">
+              <Typography className='board-switch-label'>
                 티어에 맞는 재료 보기
               </Typography>
             }
           />
-        </Box>
+        </div>
 
         {/* 캐릭터 목록 */}
-        <Box className="board-grid">
+        <div className='board-grid'>
           {sortedData.map((characterInfo, characterIndex) => (
             <Fade in={true} timeout={300 + characterIndex * 100} key={characterIndex}>
-              <Box className="board-character-wrapper">
+              <div>
                 <CharacterCard
                   characterInfo={characterInfo}
                   characterIndex={characterIndex}
                 >
                   {/* 레이드 목록 */}
-                  <Box className="board-raids-section">
+                  <div className='raid-list-container'>
                     {filteredRaidName[characterIndex]
                       ?.slice(0, showAll[characterIndex] ? filteredRaidName[characterIndex].length : 5)
                       .map((raidName, raidIndex) => {
@@ -336,28 +336,28 @@ function Board() {
                           />
                         );
                       })}
-                  </Box>
+                  </div>
 
                   {/* 더보기/접어두기 버튼 */}
                   {filteredRaidName[characterIndex]?.length > 5 && (
-                    <Box className="board-toggle-section">
+                    <div className='expand-button-container'>
                       <button
+                        className='expand-button'
                         onClick={() =>
                           setShowAll((prev) => ({
                             ...prev,
                             [characterIndex]: !prev[characterIndex],
                           }))
                         }
-                        className="board-toggle-button"
                       >
-                        {showAll[characterIndex] ? "접어두기" : "더보기"}
+                        {showAll[characterIndex] ? "접어두기" : "전체 레이드 보기"}
                       </button>
-                    </Box>
+                    </div>
                   )}
 
                   {/* 재료 정보 */}
-                  <Box className="board-material-box">
-                    <Typography variant="h6" className="board-material-title">
+                  <div className='material-info-container'>
+                    <Typography variant="h6" className='material-info-title'>
                       획득 재료
                     </Typography>
                     <Material
@@ -370,12 +370,12 @@ function Board() {
                       filteredRaidName={filteredRaidName}
                       tierMaterialSwitch={tierMaterialSwitch}
                     />
-                  </Box>
+                  </div>
                 </CharacterCard>
-              </Box>
+              </div>
             </Fade>
           ))}
-        </Box>
+        </div>
       </Container>
     </div>
   )
