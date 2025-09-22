@@ -10,13 +10,17 @@ function MainNavbar() {
     <div className='navbar'>
       <img className='lost-board' src={`${process.env.PUBLIC_URL}/logo_gold.png`}
         width="10%" onClick={() => {
-          navigate('/')}}/>
+          navigate('/')
+        }} />
       <span className='menu' onClick={() => {
-        navigate(`/board/${state}`)}}>현황판</span>
+        navigate(`/board/${state}`)
+      }}>현황판</span>
       <span className='menu' onClick={() => {
-        navigate('/efficiency')}}>더보기 효율</span>
+        navigate('/efficiency')
+      }}>더보기 효율</span>
       <span className='menu' onClick={() => {
-        navigate('/calculation')}}>계산기</span>
+        navigate('/calculation')
+      }}>계산기</span>
 
     </div>
   );
