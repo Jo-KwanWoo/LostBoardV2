@@ -264,18 +264,96 @@ body {
 }
 
 /* 현황판 전용 스타일 */
+.board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .board-header {
-  text-align: center;
   margin-bottom: 32px;
+  text-align: center;
 }
 
 .board-title {
+  color: var(--text-primary);
+  font-weight: bold;
+  margin-bottom: 16px;
   background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.board-switch-container {
+  display: flex;
+  align-items: center;
+}
+
+.board-switch-label {
+  color: var(--text-secondary);
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  justify-items: center;
+  align-items: start;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.board-loading {
+  text-align: center;
+  padding: 50px;
+}
+
+.board-no-characters {
+  text-align: center;
+  padding: 50px;
+}
+
+.raid-list-container {
+  margin-bottom: 20px;
+}
+
+.expand-button-container {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.expand-button {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-dark));
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
   font-weight: bold;
-  margin-bottom: 16px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.expand-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.material-info-container {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.material-info-title {
+  color: var(--primary-gold);
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 .character-card {
@@ -379,6 +457,13 @@ body {
 }
 
 /* 반응형 디자인 */
+@media (max-width: 1400px) {
+  .board-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 900px;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar {
     height: 60px;
@@ -426,6 +511,15 @@ body {
   
   .material-section {
     padding: 16px;
+  }
+  
+  .board-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+  
+  .board-title {
+    font-size: 1.8rem;
   }
 }
 
