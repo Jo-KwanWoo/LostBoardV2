@@ -13,6 +13,11 @@ function filteringItem(raidItemLevel) {
 
 // 보상 가치 계산 함수
 function calcPrice(item, itemData, number) {
+    // itemData가 없거나 배열이 아닌 경우 안전하게 처리
+    if (!itemData || !Array.isArray(itemData)) {
+        return 0;
+    }
+    
     let keyItem = itemData.find(x => Object.keys(x)[0] === item) || {};
     let conversionRates = {
         '운명의 파괴석': 10, '운명의 수호석': 10, '정제된 파괴강석': 10, '정제된 수호강석': 10,
@@ -99,6 +104,11 @@ function exceptionalHandling(raidName, itemData) {
 
 // 메인 함수: 레이드 효율 계산
 function calcEfficiency(raidList, itemData) {
+    // itemData가 없거나 로딩 중인 경우 빈 배열 반환
+    if (!itemData || !Array.isArray(itemData)) {
+        return raidList.map(() => ['데이터 로딩 중...']);
+    }
+    
     return raidList.map(raidName => {
         if (['에키드나', '카멘', '아브렐슈드'].includes(raidName)) return exceptionalHandling(raidName, itemData);
         
