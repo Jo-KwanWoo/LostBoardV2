@@ -20,8 +20,8 @@ function calcPrice(item, itemData, number) {
     
     let keyItem = itemData.find(x => Object.keys(x)[0] === item) || {};
     let conversionRates = {
-        '운명의 파괴석': 10, '운명의 수호석': 10, '정제된 파괴강석': 10, '정제된 수호강석': 10,
-        '파괴강석': 10, '수호강석': 10, '파괴석 결정': 10, '수호석 결정': 10,
+        '운명의 파괴석': 100, '운명의 수호석': 100, '정제된 파괴강석': 100, '정제된 수호강석': 100,
+        '파괴강석': 100, '수호강석': 100, '파괴석 결정': 100, '수호석 결정': 100,
         '운명의 파편': 3000, '명예의 파편': 1500
     };
     number /= conversionRates[item] || 1;
@@ -65,7 +65,7 @@ function sortRaidResults(results) {
 // 예외 처리 함수
 /**
  * 에키드나의 경우 single, normal 난이도에서는 3티어 재료, hard 난이도에서는 4티어 재료를 지급하기에 예외 처리
- * 카멘의 경우 1-3관문은 single, normal, hard 난이도가 존재하지만, 4관문은 hard 난이도만 존재하기에 에외 처리
+ * 카멘의 경우 1-3관문은 single, normal, hard 난이도가 존재하지만, 4관문은 hard 난이도만 존재하기에 예외 처리
  * 아브렐슈드의 경우 관문 별 입장 레벨이 다르기 때문에 예외 처리
  */
 function exceptionalHandling(raidName, itemData) {
