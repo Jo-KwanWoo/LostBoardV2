@@ -797,3 +797,73 @@ body {
     font-size: 2rem;
   }
 }
+
+/* 🎯 2단계: 티어 페이지 전용 스타일 */
+.tier4-container,
+.tier3-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.tier-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 24px 0;
+}
+
+.tier-title {
+  color: var(--text-primary);
+  font-weight: bold;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 2.2rem;
+}
+
+.tier-description {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* 🎨 반응형 디자인 */
+@media (max-width: 768px) {
+  .tier4-container,
+  .tier3-container {
+    padding: 0 15px;
+  }
+  
+  .tier-header {
+    padding: 16px 0;
+    margin-bottom: 24px;
+  }
+  
+  .tier-title {
+    font-size: 1.8rem;
+  }
+  
+  .tier-description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tier4-container,
+  .tier3-container {
+    padding: 0 10px;
+  }
+  
+  .tier-title {
+    font-size: 1.5rem;
+  }
+  
+  .tier-description {
+    font-size: 0.9rem;
+  }
+}
