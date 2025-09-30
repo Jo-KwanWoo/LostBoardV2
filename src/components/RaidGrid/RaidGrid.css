@@ -1,8 +1,8 @@
 /**
- * 🎨 RaidGrid 컴포넌트 스타일
+ * RaidGrid 컴포넌트 스타일
  */
 
-/* 🔧 메인 그리드 컨테이너 */
+/* 메인 그리드 컨테이너 */
 .raid-grid {
   width: 100%;
   max-width: 1400px;
@@ -18,7 +18,7 @@
   align-items: stretch;
 }
 
-/* 🎨 그리드 헤더 */
+/* 그리드 헤더 */
 .raid-grid__header {
   display: flex;
   justify-content: space-between;
@@ -50,7 +50,7 @@
   text-transform: uppercase;
 }
 
-/* 🎨 그리드 푸터 (통계) */
+/* 그리드 푸터 (통계) */
 .raid-grid__footer {
   margin-top: 32px;
   padding: 20px;
@@ -91,7 +91,7 @@
   color: var(--accent-red);
 }
 
-/* 🎨 상태별 스타일 */
+/* 상태별 스타일 */
 .raid-grid--loading,
 .raid-grid--error,
 .raid-grid--empty {
@@ -119,8 +119,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text,
@@ -153,19 +158,19 @@
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
-/* 🎨 반응형 디자인 */
+/* 반응형 디자인 */
 @media (max-width: 768px) {
   .raid-grid__header {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
-  
+
   .raid-grid__stats {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .raid-grid__footer {
     padding: 16px;
   }
@@ -175,7 +180,7 @@
   .raid-grid {
     padding: 0 8px;
   }
-  
+
   .loading-container,
   .error-container,
   .empty-container {
