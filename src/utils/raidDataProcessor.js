@@ -10,7 +10,7 @@
 
 import Raid from "../Data";
 
-// 🔧 아이템 레벨별 재료 매핑 (기존과 동일하지만 더 명확한 구조)
+// 아이템 레벨별 재료 매핑 (기존과 동일하지만 더 명확한 구조)
 const MATERIAL_MAPPING = {
     1640: { 
         destruction: '운명의 파괴석', 
@@ -38,7 +38,7 @@ const MATERIAL_MAPPING = {
     }
 };
 
-// 🔧 재료 변환 비율 (기존과 동일)
+// 재료 변환 비율 (기존과 동일)
 const CONVERSION_RATES = {
     '운명의 파괴석': 100, '운명의 수호석': 100, 
     '정제된 파괴강석': 100, '정제된 수호강석': 100,
@@ -48,7 +48,7 @@ const CONVERSION_RATES = {
 };
 
 /**
- * 🎯 핵심 개선: 아이템 레벨에 따른 재료 타입 결정
+ * 핵심 개선: 아이템 레벨에 따른 재료 타입 결정
  * @param {number} raidItemLevel - 레이드 입장 레벨
  * @returns {Object} 해당 레벨의 재료 타입들
  */
@@ -59,7 +59,7 @@ function getMaterialTypes(raidItemLevel) {
 }
 
 /**
- * 🎯 핵심 개선: 재료 가격 계산 (기존 로직 개선)
+ * 핵심 개선: 재료 가격 계산 (기존 로직 개선)
  * @param {string} materialName - 재료 이름
  * @param {Array} itemData - API에서 받은 가격 데이터
  * @param {number} quantity - 수량
@@ -79,7 +79,7 @@ function calculateMaterialPrice(materialName, itemData, quantity) {
 }
 
 /**
- * 🎯 핵심 개선: 관문별 상세 정보 구조화
+ * 핵심 개선: 관문별 상세 정보 구조화
  * @param {Object} raidData - 레이드 데이터
  * @param {Array} itemData - 가격 데이터
  * @param {Object} materialTypes - 재료 타입 매핑
@@ -87,7 +87,7 @@ function calculateMaterialPrice(materialName, itemData, quantity) {
  */
 function processGateDetails(raidData, itemData, materialTypes) {
     return raidData.additionalGold.map((goldCost, gateIndex) => {
-        // 🔧 기본 재료 보상 계산
+        // 기본 재료 보상 계산
         const materials = {};
         const materialKeys = Object.keys(materialTypes);
         
@@ -101,7 +101,7 @@ function processGateDetails(raidData, itemData, materialTypes) {
             };
         });
 
-        // 🔧 특수 보상 처리 (기존에 누락되었던 부분!)
+        // 특수 보상 처리 (기존에 누락되었던 부분!)
         const specialRewards = {};
         const uniqueRewards = raidData.additionalUniqueRewards[gateIndex] || {};
         
@@ -116,7 +116,7 @@ function processGateDetails(raidData, itemData, materialTypes) {
             }
         });
 
-        // 🔧 총 재료 가격 계산
+        // 총 재료 가격 계산
         const totalMaterialPrice = Object.values(materials).reduce(
             (sum, material) => sum + material.price, 0
         );
@@ -133,13 +133,13 @@ function processGateDetails(raidData, itemData, materialTypes) {
 }
 
 /**
- * 🎯 핵심 개선: 난이도별 데이터 구조화
+ * 핵심 개선: 난이도별 데이터 구조화
  * @param {string} raidName - 레이드 이름
  * @param {Array} itemData - 가격 데이터
  * @returns {Object} 구조화된 레이드 데이터
  */
 function getStructuredRaidData(raidName, itemData) {
-    // 🔧 해당 레이드의 모든 난이도 데이터 가져오기
+    // 해당 레이드의 모든 난이도 데이터 가져오기
     const raidVariants = Raid.filter(raid => 
         raid.RaidName === raidName || 
         raid.RaidName.includes(raidName) ||
@@ -156,7 +156,7 @@ function getStructuredRaidData(raidName, itemData) {
         };
     }
 
-    // 🔧 난이도별로 그룹화
+    // 난이도별로 그룹화
     const difficulties = {};
     const availableDifficulties = [];
 
@@ -167,7 +167,7 @@ function getStructuredRaidData(raidName, itemData) {
         difficulties[difficulty] = {
             itemLevel: raidData.RaidItemLevel,
             gates: processGateDetails(raidData, itemData, materialTypes),
-            // 🔧 전체 효율성 계산 (모든 관문 평균)
+            // 전체 효율성 계산 (모든 관문 평균)
             overallEfficiency: 0 // 나중에 계산
         };
 
@@ -176,7 +176,7 @@ function getStructuredRaidData(raidName, itemData) {
         }
     });
 
-    // 🔧 각 난이도별 전체 효율성 계산 (실제 골드 차이로)
+    // 각 난이도별 전체 효율성 계산 (실제 골드 차이로)
     Object.keys(difficulties).forEach(difficulty => {
         const gates = difficulties[difficulty].gates;
         const totalGold = gates.reduce((sum, gate) => sum + gate.goldCost, 0);
@@ -185,7 +185,7 @@ function getStructuredRaidData(raidName, itemData) {
         difficulties[difficulty].overallEfficiency = Math.round(totalMaterialValue - totalGold);
     });
 
-    // 🔧 기본 난이도 설정 (우선순위: hard > normal > single)
+    // 기본 난이도 설정 (우선순위: hard > normal > single)
     const difficultyPriority = ['hard', 'normal', 'single'];
     const defaultDifficulty = difficultyPriority.find(diff => 
         availableDifficulties.includes(diff)
@@ -203,7 +203,7 @@ function getStructuredRaidData(raidName, itemData) {
 }
 
 /**
- * 🎯 메인 함수: 모든 레이드 데이터 처리
+ * 메인 함수: 모든 레이드 데이터 처리
  * @param {Array} raidList - 레이드 이름 목록
  * @param {Array} itemData - 가격 데이터
  * @returns {Array} 구조화된 레이드 데이터 배열
@@ -223,7 +223,7 @@ export function processAllRaidData(raidList, itemData) {
 }
 
 /**
- * 🎯 유틸리티: 특정 레이드의 특정 난이도 데이터만 가져오기
+ * 유틸리티: 특정 레이드의 특정 난이도 데이터만 가져오기
  * @param {string} raidName - 레이드 이름
  * @param {string} difficulty - 난이도
  * @param {Array} itemData - 가격 데이터

@@ -1,9 +1,9 @@
 /**
- * 🎨 RaidCard 컴포넌트 전용 스타일
+ * RaidCard 컴포넌트 전용 스타일
  * Lost Ark 테마를 유지하면서 새로운 기능에 맞는 디자인
  */
 
-/* 🔧 메인 카드 스타일 */
+/* 메인 카드 스타일 */
 .raid-card {
   background: var(--bg-card);
   border: 2px solid var(--border-color);
@@ -35,7 +35,7 @@
   border-radius: 16px 16px 0 0;
 }
 
-/* 🎨 카드 헤더 */
+/* 카드 헤더 */
 .raid-card__header {
   padding: 20px 20px 16px;
   text-align: center;
@@ -119,7 +119,7 @@
   font-weight: 500;
 }
 
-/* 🎨 카드 내용 */
+/* 카드 내용 */
 .raid-card__content {
   flex: 1;
   padding: 16px 20px;
@@ -180,7 +180,7 @@
   color: var(--accent-red);
 }
 
-/* 🎨 상세 정보 */
+/* 상세 정보 */
 .raid-card__details {
   background: var(--bg-tertiary);
   border-radius: 8px;
@@ -247,7 +247,7 @@
   margin-bottom: 0;
 }
 
-/* 🎨 카드 액션 */
+/* 카드 액션 */
 .raid-card__actions {
   padding: 12px 20px;
   border-top: 1px solid var(--border-color);
@@ -294,7 +294,7 @@
   border-color: var(--primary-gold);
 }
 
-/* 🎨 난이도 정보 */
+/* 난이도 정보 */
 .raid-card__difficulties {
   padding: 12px 20px;
   border-top: 1px solid var(--border-color);
@@ -359,7 +359,7 @@
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
 }
 
-/* 🎨 상태별 스타일 */
+/* 상태별 스타일 */
 .raid-card--loading {
   opacity: 0.7;
 }
@@ -382,7 +382,7 @@
   font-weight: 500;
 }
 
-/* 🎨 반응형 디자인 */
+/* 반응형 디자인 */
 @media (max-width: 768px) {
   .raid-card {
     min-height: 400px;
