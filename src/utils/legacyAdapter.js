@@ -1,12 +1,12 @@
 /**
- * 🔄 레거시 호환성 어댑터
+ * 레거시 호환성 어댑터
  * 기존 컴포넌트들이 새로운 데이터 구조를 사용할 수 있도록 변환
  */
 
 import { processAllRaidData } from './raidDataProcessor';
 
 /**
- * 🎯 새로운 구조 → 기존 구조 변환 (임시 호환성용)
+ * 새로운 구조 → 기존 구조 변환 (임시 호환성용)
  * @param {Array} raidList - 레이드 목록
  * @param {Array} itemData - 가격 데이터
  * @returns {Array} 기존 형태의 문자열 배열
@@ -36,7 +36,7 @@ export function convertToLegacyFormat(raidList, itemData) {
 }
 
 /**
- * 🎯 점진적 마이그레이션을 위한 하이브리드 함수
+ * 점진적 마이그레이션을 위한 하이브리드 함수
  * 기존 calcEfficiency 함수를 대체하면서 새로운 기능도 제공
  */
 export function hybridCalcEfficiency(raidList, itemData, useNewFormat = false) {

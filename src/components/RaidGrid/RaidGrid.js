@@ -1,5 +1,5 @@
 /**
- * 🎯 RaidGrid 컴포넌트
+ * RaidGrid 컴포넌트
  * 레이드 카드들을 그리드 형태로 배치하는 레이아웃 컴포넌트
  */
 
@@ -9,7 +9,7 @@ import RaidCard from '../RaidCard/RaidCard';
 import './RaidGrid.css';
 
 /**
- * 🎯 메인 RaidGrid 컴포넌트
+ * 메인 RaidGrid 컴포넌트
  */
 function RaidGrid({
   raidList,
@@ -20,7 +20,7 @@ function RaidGrid({
   error = null
 }) {
 
-  // 🔧 로딩 상태 처리
+  // 로딩 상태 처리
   if (loading) {
     return (
       <div className="raid-grid raid-grid--loading">
@@ -32,12 +32,12 @@ function RaidGrid({
     );
   }
 
-  // 🔧 에러 상태 처리
+  // 에러 상태 처리
   if (error) {
     return (
       <div className="raid-grid raid-grid--error">
         <div className="error-container">
-          <div className="error-icon">⚠️</div>
+          <div className="error-icon">!</div>
           <div className="error-text">{error}</div>
           <button
             className="error-retry-btn"
@@ -50,7 +50,7 @@ function RaidGrid({
     );
   }
 
-  // 🔧 데이터 검증
+  // 데이터 검증
   if (!raidList || !Array.isArray(raidList) || raidList.length === 0) {
     return (
       <div className="raid-grid raid-grid--empty">
@@ -64,7 +64,7 @@ function RaidGrid({
 
   return (
     <div className="raid-grid">
-      {/* 🎨 그리드 헤더 (선택사항) */}
+      {/* 그리드 헤더 : 업데이트된 시간 표시) */}
       <div className="raid-grid__header">
         <div className="stat-item">
           <span className="stat-label">데이터 업데이트</span>
@@ -104,9 +104,6 @@ function RaidGrid({
   );
 }
 
-/**
- * 🔧 유틸리티: 평균 순이익 계산
- */
 function calculateAverageEfficiency(raidDataArray, isNewStructure) {
   if (!Array.isArray(raidDataArray) || raidDataArray.length === 0) return 0;
 
@@ -139,7 +136,7 @@ function calculateAverageEfficiency(raidDataArray, isNewStructure) {
 }
 
 /**
- * 🔧 유틸리티: 최고 순이익 찾기
+ * 유틸리티: 최고 순이익 찾기
  */
 function findBestEfficiency(raidDataArray, isNewStructure) {
   if (!Array.isArray(raidDataArray) || raidDataArray.length === 0) return 0;

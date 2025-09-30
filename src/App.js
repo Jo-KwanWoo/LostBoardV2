@@ -93,7 +93,7 @@ function App() {
                     onClick={handleSearch}
                     size="large"
                   >
-                    🔍 검색하기
+                    검색하기
                   </Button>
                 </div>
               </div>
