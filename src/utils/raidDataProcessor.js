@@ -127,7 +127,7 @@ function processGateDetails(raidData, itemData, materialTypes) {
             materials: materials,
             specialRewards: specialRewards,
             totalMaterialPrice: totalMaterialPrice,
-            efficiency: totalMaterialPrice > 0 ? (totalMaterialPrice / goldCost * 100).toFixed(1) : 0
+            efficiency: Math.round(totalMaterialPrice - goldCost) // 실제 골드 차이로 변경
         };
     });
 }
@@ -176,15 +176,13 @@ function getStructuredRaidData(raidName, itemData) {
         }
     });
 
-    // 🔧 각 난이도별 전체 효율성 계산
+    // 🔧 각 난이도별 전체 효율성 계산 (실제 골드 차이로)
     Object.keys(difficulties).forEach(difficulty => {
         const gates = difficulties[difficulty].gates;
         const totalGold = gates.reduce((sum, gate) => sum + gate.goldCost, 0);
         const totalMaterialValue = gates.reduce((sum, gate) => sum + gate.totalMaterialPrice, 0);
         
-        difficulties[difficulty].overallEfficiency = totalGold > 0 
-            ? (totalMaterialValue / totalGold * 100).toFixed(1)
-            : 0;
+        difficulties[difficulty].overallEfficiency = Math.round(totalMaterialValue - totalGold);
     });
 
     // 🔧 기본 난이도 설정 (우선순위: hard > normal > single)

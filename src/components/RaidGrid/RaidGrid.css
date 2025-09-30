@@ -1,0 +1,184 @@
+/**
+ * 🎨 RaidGrid 컴포넌트 스타일
+ */
+
+/* 🔧 메인 그리드 컨테이너 */
+.raid-grid {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.raid-grid__container {
+  margin-bottom: 24px;
+}
+
+.raid-grid__item {
+  display: flex;
+  align-items: stretch;
+}
+
+/* 🎨 그리드 헤더 */
+.raid-grid__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.raid-grid__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.raid-count {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.data-structure-badge {
+  background: linear-gradient(135deg, var(--accent-green), #059669);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* 🎨 그리드 푸터 (통계) */
+.raid-grid__footer {
+  margin-top: 32px;
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.raid-grid__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  display: block;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.stat-value--positive {
+  color: var(--accent-green);
+}
+
+.stat-value--negative {
+  color: var(--accent-red);
+}
+
+/* 🎨 상태별 스타일 */
+.raid-grid--loading,
+.raid-grid--error,
+.raid-grid--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loading-container,
+.error-container,
+.empty-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  border: 3px solid var(--bg-tertiary);
+  border-top: 3px solid var(--primary-gold);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text,
+.error-text,
+.empty-text {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.error-icon,
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.error-retry-btn {
+  background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-dark));
+  color: var(--bg-primary);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.error-retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+/* 🎨 반응형 디자인 */
+@media (max-width: 768px) {
+  .raid-grid__header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .raid-grid__stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .raid-grid__footer {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .raid-grid {
+    padding: 0 8px;
+  }
+  
+  .loading-container,
+  .error-container,
+  .empty-container {
+    padding: 20px;
+  }
+}

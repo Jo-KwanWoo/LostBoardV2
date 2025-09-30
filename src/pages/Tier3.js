@@ -1,54 +1,42 @@
-import Grid from '@mui/material/Grid2';
 import calcEfficiency from '../calcEfficiency';
+// 🧪 새로운 데이터 구조 테스트용 임포트
+import { hybridCalcEfficiency } from '../utils/legacyAdapter';
+// 🎯 2단계: 새로운 컴포넌트 임포트
+import RaidGrid from '../components/RaidGrid/RaidGrid';
 
 function Tier3(props) {
   const raidList = ['카멘', '혼돈의 상아탑', '일리아칸',
     '카양겔', '아브렐슈드', '쿠크세이튼', '비아키스', '발탄', '아르고스'];
   
-  let arr = calcEfficiency(raidList, props.itemData);
+  // 🧪 새로운 데이터 구조 테스트 (3티어는 아직 기존 구조 사용)
+  const useNewStructure = process.env.NODE_ENV === 'development' && true; // 3티어는 아직 false
+  
+  let raidDataArray = useNewStructure 
+    ? hybridCalcEfficiency(raidList, props.itemData, true)
+    : calcEfficiency(raidList, props.itemData);
 
-  // 데이터 로딩 중일 때 표시
-  if (!props.itemData) {
-    return (
-      <div style={{ textAlign: 'center', padding: '50px', color: 'var(--text-secondary)' }}>
-        <div>재료 가격 데이터를 불러오는 중...</div>
-      </div>
-    );
-  }
+  // 🎯 상세 정보 클릭 핸들러
+  const handleRaidDetailClick = (raidName, raidData) => {
+    console.log(`${raidName} 상세 정보:`, raidData);
+    // TODO: 3단계에서 모달 또는 상세 페이지로 이동
+  };
 
   return (
-    <div>
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {raidList.map((raidName, index) => (
-          <Grid key={index} size={{ xs: 2, sm: 4, md: 4 }}>
-            <div className="efficiency-raid-card">
-              <img 
-                src={`${process.env.PUBLIC_URL}/Raid/${raidName}.jpg`}
-                alt={raidName}
-                className="efficiency-raid-image"
-              />
-              <div className="efficiency-raid-title">
-                {raidName}
-              </div>
-              <div className="efficiency-raid-info">
-                {Array.isArray(arr[index]) ? (
-                  arr[index].map((a, i) => (
-                    <div key={i}>
-                      {Array.isArray(a) ? (
-                        a.map((b, j) => <div key={j}>{b}</div>)
-                      ) : (
-                        <div>{a}</div>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <div>{arr[index]}</div>
-                )}
-              </div>
-            </div>
-          </Grid>
-        ))}
-      </Grid>
+    <div className="tier3-container">
+      {/* 🎨 페이지 헤더 */}
+      <div className="tier-header">
+        <h2 className="tier-title">3티어 레이드 더보기 효율</h2>
+      </div>
+
+      {/* 🎯 새로운 RaidGrid 컴포넌트 사용 */}
+      <RaidGrid
+        raidList={raidList}
+        raidDataArray={raidDataArray}
+        isNewStructure={useNewStructure}
+        onRaidDetailClick={handleRaidDetailClick}
+        loading={!props.itemData}
+        error={props.error || null}
+      />
     </div>
   )
 }
