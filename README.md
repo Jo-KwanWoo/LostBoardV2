@@ -33,11 +33,6 @@ Lost Ark 공식 API를 활용하여 캐릭터 정보를 조회하고, 레이드�
 - **Axios** - HTTP 클라이언트
 - **Lost Ark Open API** - 게임 데이터 연동
 
-### Development Tools
-- **Create React App** - 프로젝트 설정 및 빌드
-- **React Testing Library** - 컴포넌트 테스팅
-- **Jest** - 단위 테스트 프레임워크
-
 ## 🚀 시작하기
 
 ### 사전 요구사항
@@ -61,16 +56,19 @@ Lost Ark 공식 API를 활용하여 캐릭터 정보를 조회하고, 레이드�
 3. **환경변수 설정**
    ```bash
    # .env 파일 생성 후 다음 내용 추가
-   REACT_APP_API_TOKEN=Bearer_YOUR_API_TOKEN
-   REACT_APP_API_ID=YOUR_API_ID
+   REACT_APP_API_TOKEN = Bearer YOUR_API_TOKEN
+   REACT_APP_API_ID = YOUR_API_ID
+
+   //예시
+   REACT_APP_API_TOKEN = Bearer eyJ0eXA.....b-04Kdfgg
+   REACT_APP_API_ID = 123456789
    ```
 
 4. **개발 서버 실행**
    ```bash
    npm start
    ```
-   브라우저에서 [http://localhost:3000](http://localhost:3000)으로 접속
-
+   
 5. **프로덕션 빌드**
    ```bash
    npm run build
