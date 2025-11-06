@@ -156,7 +156,7 @@ src/
 
 - **개발자**: [jo-kwanwoo](https://github.com/jo-kwanwoo)
 - **프로젝트 링크**: [https://github.com/jo-kwanwoo/lostboard](https://github.com/jo-kwanwoo/lostboard)
-- **블로그 링크**: [[https://jo-kwanwoo.github.io/lostboard](https://qweasd5123.tistory.com/)
+- **블로그 링크**: [https://qweasd5123.tistory.com/](https://qweasd5123.tistory.com/)
 
 ## 🙏 감사의 말
 
