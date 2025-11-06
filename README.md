@@ -151,15 +151,12 @@ src/
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
 ## 📞 연락처
 
 - **개발자**: [jo-kwanwoo](https://github.com/jo-kwanwoo)
 - **프로젝트 링크**: [https://github.com/jo-kwanwoo/lostboard](https://github.com/jo-kwanwoo/lostboard)
-- **데모 사이트**: [https://jo-kwanwoo.github.io/lostboard](https://jo-kwanwoo.github.io/lostboard)
+- **블로그 링크**: [[https://jo-kwanwoo.github.io/lostboard](https://qweasd5123.tistory.com/)
 
 ## 🙏 감사의 말
 
