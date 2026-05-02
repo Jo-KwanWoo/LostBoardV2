@@ -1,10 +1,8 @@
 import Raid from "./Data";
 
-function raidClearReward(raidLevel, index, rewardType, characterLevel) {
-    // 재료 키는 캐릭터 레벨 기준으로 결정 (없으면 레이드 레벨 사용)
-    const levelForMaterial = characterLevel || raidLevel;
+function raidClearReward(raidLevel, index, rewardType) {
     let updates = {}
-    if (levelForMaterial >= 1730) {
+    if (raidLevel >= 1730) {
         updates = {
             '운명의 파괴석 결정': 0,
             '운명의 수호석 결정': 0,
@@ -12,7 +10,7 @@ function raidClearReward(raidLevel, index, rewardType, characterLevel) {
             '위대한 운명의 돌파석': 0,
         };
     }
-    else if (levelForMaterial >= 1620) {
+    else if (raidLevel >= 1620) {
         updates = {
             '운명의 파괴석': 0,
             '운명의 수호석': 0,
@@ -20,7 +18,7 @@ function raidClearReward(raidLevel, index, rewardType, characterLevel) {
             '운명의 돌파석': 0,
         };
     } 
-    else if (levelForMaterial >= 1580) {
+    else if (raidLevel >= 1580) {
         updates = {
             '정제된 파괴강석': 0,
             '정제된 수호강석': 0,
@@ -28,7 +26,7 @@ function raidClearReward(raidLevel, index, rewardType, characterLevel) {
             '찬란한 명예의 돌파석': 0,
         };
     }
-    else if (levelForMaterial >= 1490) {
+    else if (raidLevel >= 1490) {
         updates = {
             '파괴강석': 0,
             '수호강석': 0,
