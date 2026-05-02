@@ -2,14 +2,23 @@ import Raid from "./Data";
 
 function raidClearReward(raidLevel, index, rewardType) {
     let updates = {}
-    if (raidLevel >= 1640) {
+    if (raidLevel >= 1730) {
+        updates = {
+            '운명의 파괴석 결정': 0,
+            '운명의 수호석 결정': 0,
+            '운명의 파편': 0,
+            '위대한 운명의 돌파석': 0,
+        };
+    }
+    else if (raidLevel >= 1620) {
         updates = {
             '운명의 파괴석': 0,
             '운명의 수호석': 0,
             '운명의 파편': 0,
             '운명의 돌파석': 0,
         };
-    } else if (raidLevel >= 1580) {
+    } 
+    else if (raidLevel >= 1580) {
         updates = {
             '정제된 파괴강석': 0,
             '정제된 수호강석': 0,
