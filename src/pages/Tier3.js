@@ -8,8 +8,8 @@ function Tier3(props) {
   const raidList = ['카멘', '혼돈의 상아탑', '일리아칸',
     '카양겔', '아브렐슈드', '쿠크세이튼', '비아키스', '발탄', '아르고스'];
   
-  // 새로운 데이터 구조 테스트 (3티어는 아직 기존 구조 사용)
-  const useNewStructure = process.env.NODE_ENV === 'development' && true; // 3티어는 아직 false
+  // 새로운 데이터 구조 사용 (production 포함 전체 환경)
+  const useNewStructure = true;
   
   let raidDataArray = useNewStructure 
     ? hybridCalcEfficiency(raidList, props.itemData, true)

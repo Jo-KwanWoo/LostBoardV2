@@ -7,8 +7,8 @@ import RaidGrid from '../components/RaidGrid/RaidGrid';
 function Tier4(props) {
   const raidList = ['지평의 성당', '세르카', '카제로스(종막)', '아르모체(4막)', '모르둠(3막)', '아브렐슈드(2막)', '에기르(1막)', '베히모스', '에키드나(서막)'];
 
-  // 새로운 데이터 구조 테스트 (2단계에서 활성화)
-  const useNewStructure = process.env.NODE_ENV === 'development' && true; // 2단계 테스트용
+  // 새로운 데이터 구조 사용 (production 포함 전체 환경)
+  const useNewStructure = true;
 
   let raidDataArray = useNewStructure
     ? hybridCalcEfficiency(raidList, props.itemData, true)
