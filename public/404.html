@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>LostBoard</title>
+    <script>
+      // GitHub Pages SPA 리다이렉트
+      // /LostBoardV2/efficiency → /LostBoardV2/?p=/efficiency 로 변환 후 index.html로 전달
+      var pathSegmentsToKeep = 1; // /LostBoardV2 에서 1 세그먼트 유지
+
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
