@@ -12,7 +12,13 @@ import Raid from "../Data";
 
 // 아이템 레벨별 재료 매핑 (기존과 동일하지만 더 명확한 구조)
 const MATERIAL_MAPPING = {
-    1640: { 
+    1730: { 
+        destruction: '운명의 파괴석 결정', 
+        guardian: '운명의 수호석 결정', 
+        fragment: '운명의 파편', 
+        breakthrough: '위대한 운명의 돌파석' 
+    },
+    1620: { 
         destruction: '운명의 파괴석', 
         guardian: '운명의 수호석', 
         fragment: '운명의 파편', 
@@ -38,8 +44,9 @@ const MATERIAL_MAPPING = {
     }
 };
 
-// 재료 변환 비율 (기존과 동일)
+// 재료 변환 비율
 const CONVERSION_RATES = {
+    '운명의 파괴석 결정': 100, '운명의 수호석 결정': 100, 
     '운명의 파괴석': 100, '운명의 수호석': 100, 
     '정제된 파괴강석': 100, '정제된 수호강석': 100,
     '파괴강석': 100, '수호강석': 100, 
@@ -87,7 +94,7 @@ function calculateMaterialPrice(materialName, itemData, quantity) {
  */
 function processGateDetails(raidData, itemData, materialTypes) {
     return raidData.additionalGold.map((goldCost, gateIndex) => {
-        // 기본 재료 보상 계산
+        // 더보기 기본 재료 보상 계산
         const materials = {};
         const materialKeys = Object.keys(materialTypes);
         
@@ -101,7 +108,7 @@ function processGateDetails(raidData, itemData, materialTypes) {
             };
         });
 
-        // 특수 보상 처리 (기존에 누락되었던 부분!)
+        // 더보기 특수 보상 처리
         const specialRewards = {};
         const uniqueRewards = raidData.additionalUniqueRewards[gateIndex] || {};
         
@@ -110,7 +117,32 @@ function processGateDetails(raidData, itemData, materialTypes) {
                 specialRewards[itemName] = {
                     name: itemName,
                     quantity: quantity,
-                    // 특수 아이템은 가격 정보가 없으므로 0으로 설정
+                    price: 0
+                };
+            }
+        });
+
+        // 클리어 기본 재료 보상 계산
+        const clearMaterials = {};
+        const clearGold = raidData.clearGold[gateIndex] || 0;
+        materialKeys.forEach((key, index) => {
+            const materialName = materialTypes[key];
+            const quantity = raidData.clearReward[gateIndex]?.[index] || 0;
+            clearMaterials[key] = {
+                name: materialName,
+                quantity: quantity,
+                price: calculateMaterialPrice(materialName, itemData, quantity)
+            };
+        });
+
+        // 클리어 특수 보상 처리
+        const clearSpecialRewards = {};
+        const clearUniqueRewards = raidData.clearUniqueRewards[gateIndex] || {};
+        Object.entries(clearUniqueRewards).forEach(([itemName, quantity]) => {
+            if (quantity > 0) {
+                clearSpecialRewards[itemName] = {
+                    name: itemName,
+                    quantity: quantity,
                     price: 0
                 };
             }
@@ -124,10 +156,13 @@ function processGateDetails(raidData, itemData, materialTypes) {
         return {
             gate: gateIndex + 1,
             goldCost: goldCost,
+            clearGold: clearGold,
             materials: materials,
             specialRewards: specialRewards,
+            clearMaterials: clearMaterials,
+            clearSpecialRewards: clearSpecialRewards,
             totalMaterialPrice: totalMaterialPrice,
-            efficiency: Math.round(totalMaterialPrice - goldCost) // 실제 골드 차이로 변경
+            efficiency: Math.round(totalMaterialPrice - goldCost)
         };
     });
 }
@@ -186,7 +221,7 @@ function getStructuredRaidData(raidName, itemData) {
     });
 
     // 기본 난이도 설정 (우선순위: hard > normal > single)
-    const difficultyPriority = ['hard', 'normal', 'single'];
+    const difficultyPriority = ['nightmare', 'hard', 'normal', 'single'];
     const defaultDifficulty = difficultyPriority.find(diff => 
         availableDifficulties.includes(diff)
     ) || availableDifficulties[0];
@@ -195,7 +230,7 @@ function getStructuredRaidData(raidName, itemData) {
         raidName,
         difficulties,
         availableDifficulties: availableDifficulties.sort((a, b) => {
-            const order = { 'hard': 1, 'normal': 2, 'single': 3 };
+            const order = { 'nightmare' : 1, 'hard': 2, 'normal': 3, 'single': 4 };
             return (order[a] || 999) - (order[b] || 999);
         }),
         defaultDifficulty

@@ -70,4 +70,21 @@ let level1640Light = [
     },
 ]
 
-export {level1370Light,level1490Light,level1580Light,level1640Light}
+let level1730Light = [
+    {
+        '골드' : 0
+    },
+    {
+        '운명의 파편' : 0
+    },
+    {
+        '위대한 운명의 돌파석' : 0
+    },  
+    {
+        '운명의 파괴석 결정' : 0
+    },
+    {
+        '운명의 수호석 결정' : 0
+    },
+]
+export {level1370Light,level1490Light,level1580Light,level1640Light,level1730Light}

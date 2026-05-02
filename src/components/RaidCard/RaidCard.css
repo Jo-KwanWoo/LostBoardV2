@@ -95,22 +95,31 @@
   text-transform: uppercase;
 }
 
-.difficulty-badge--hard {
+.difficulty-badge--hard,
+.difficulty-badge--3단계 {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
-.difficulty-badge--normal {
+.difficulty-badge--normal,
+.difficulty-badge--2단계 {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
-.difficulty-badge--single {
+.difficulty-badge--single,
+.difficulty-badge--1단계 {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.difficulty-badge--nightmare {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: white;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3);
 }
 
 .item-level {
@@ -359,6 +368,39 @@
   box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
 }
 
+.difficulty-tag--nightmare {
+  background: linear-gradient(135deg, #a855f7, #7c3aed);
+  color: white;
+  border-color: #a855f7;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3);
+}
+
+.difficulty-tag--nightmare:hover {
+  background: linear-gradient(135deg, #c084fc, #a855f7);
+  border-color: #c084fc;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+}
+
+.difficulty-tag--3단계,
+.difficulty-tag--2단계,
+.difficulty-tag--1단계 {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.difficulty-tag--3단계:hover,
+.difficulty-tag--2단계:hover,
+.difficulty-tag--1단계:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-gold);
+  color: var(--primary-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
+}
+
 /* 상태별 스타일 */
 .raid-card--loading {
   opacity: 0.7;
@@ -450,5 +492,289 @@
   
   .raid-card__actions {
     padding: 10px 16px;
+  }
+}
+
+/* ===== 보상 상세 모달 ===== */
+.reward-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+}
+
+.reward-modal {
+  background: var(--bg-card);
+  border: 2px solid var(--primary-gold);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 1100px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 40px rgba(212, 175, 55, 0.25);
+  overflow: hidden;
+}
+
+.reward-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+}
+
+.reward-modal__title-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.reward-modal__title {
+  color: var(--primary-gold);
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}
+
+.reward-modal__meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.reward-modal__ilvl {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.reward-modal__difficulties {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.reward-modal__close {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* 헤더 좌우 균형을 맞추기 위한 플레이스홀더 */
+.reward-modal__close--placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.reward-modal__close:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-gold);
+  color: var(--primary-gold);
+}
+
+.reward-modal__body {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: center;
+  /* 스크롤바 항상 표시해서 스크롤 가능 여부를 사용자가 인지할 수 있게 */
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-gold) var(--bg-tertiary);
+}
+
+.reward-modal__body::-webkit-scrollbar {
+  height: 6px;
+}
+
+.reward-modal__body::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.reward-modal__body::-webkit-scrollbar-thumb {
+  background: var(--primary-gold);
+  border-radius: 3px;
+}
+
+/* 관문 섹션 */
+.reward-gate-section {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  /* 가로 배치 시 너비 고정 — 내용이 많아도 찌그러지지 않게 */
+  min-width: 300px;
+  flex-shrink: 0;
+}
+
+.reward-gate-section__title {
+  background: var(--bg-secondary);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.reward-gate-number {
+  color: var(--primary-gold);
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+/* 보상 블록 (클리어 / 더보기) */
+.reward-block {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.reward-block:last-child {
+  border-bottom: none;
+}
+
+.reward-block__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.reward-block__label--clear {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.reward-block__label--additional {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--primary-gold);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.reward-block__gold,
+.reward-block__efficiency {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--border-color);
+  margin-bottom: 6px;
+}
+
+.reward-block__efficiency {
+  border-bottom: none;
+  border-top: 1px dashed var(--border-color);
+  margin-top: 6px;
+  margin-bottom: 0;
+  padding-top: 8px;
+}
+
+.reward-block__items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 개별 보상 아이템 */
+.reward-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.reward-item--special {
+  color: var(--primary-gold);
+}
+
+.reward-item-name {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  flex: 1;
+}
+
+.reward-item--special .reward-item-name {
+  color: var(--primary-gold);
+}
+
+.reward-item-qty {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 60px;
+  text-align: right;
+}
+
+.reward-item-price {
+  color: var(--accent-blue);
+  font-size: 0.8rem;
+  min-width: 80px;
+  text-align: right;
+}
+
+.reward-item-value {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.reward-item-value--gold {
+  color: var(--primary-gold);
+}
+
+.reward-item-value--cost {
+  color: var(--accent-red);
+}
+
+.reward-item-value--positive {
+  color: var(--accent-green);
+}
+
+.reward-item-value--negative {
+  color: var(--accent-red);
+}
+
+@media (max-width: 600px) {
+  .reward-modal {
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+
+  .reward-modal__header {
+    padding: 16px 16px 12px;
+  }
+
+  .reward-modal__body {
+    padding: 12px 16px 20px;
+  }
+
+  .reward-gate-section {
+    min-width: 200px;
   }
 }

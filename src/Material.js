@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { level1370Full, level1490Full, level1580Full, level1640Full } from "./materialListByLevelFull";
-import { level1370Light, level1490Light, level1580Light, level1640Light } from "./materialListByLevelLight"
+import { level1370Full, level1490Full, level1580Full, level1640Full, level1730Full } from "./materialListByLevelFull";
+import { level1370Light, level1490Light, level1580Light, level1640Light, level1730Light } from "./materialListByLevelLight"
 import Raid from "./Data";
 import raidClearReward from "./raidClearReward";
 
@@ -18,7 +18,9 @@ function Material(props) {
   // 기본 재료 템플릿 가져오기
   const getBaseMaterial = useCallback(() => {
     if (props.tierMaterialSwitch === true) {
-      if (itemLevel >= 1640) {
+      if (itemLevel >= 1730) {
+        return [...level1730Light];
+      } else if (itemLevel >= 1640) {
         return [...level1640Light];
       } else if (itemLevel >= 1580) {
         return [...level1580Light];
@@ -28,7 +30,9 @@ function Material(props) {
         return [...level1370Light];
       }
     } else {
-      if (itemLevel >= 1640) {
+      if (itemLevel >= 1730) {
+        return [...level1730Full];
+      } else if (itemLevel >= 1640) {
         return [...level1640Full];
       } else if (itemLevel >= 1580) {
         return [...level1580Full];
