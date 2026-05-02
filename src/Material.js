@@ -94,7 +94,10 @@ function Material(props) {
     if (raidLevel && index !== null) {
       // 보상 타입에 따른 함수 처리. rewardType === '골드' 인 경우 goldReward()함수를 실행.
       // rewardType === '클리어 재료' || '더보기 재료' 인 경우 raidClearReward()함수를 실행.
-      const updates = rewardType === '골드' ? { 골드: rewardFunction(index) } : rewardFunction(raidLevel, index, rewardType);
+      // 재료 키는 캐릭터 레벨 기준으로 결정
+      const updates = rewardType === '골드'
+        ? { 골드: rewardFunction(index) }
+        : rewardFunction(raidLevel, index, rewardType, itemLevel);
       const prevChecked = previousCheckedValues.current || {};
       const currentChecked = checkedValues || {};
 
