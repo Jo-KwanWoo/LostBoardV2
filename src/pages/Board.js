@@ -28,7 +28,7 @@ function Board() {
           CharacterName: state,
         },
       });
-      setCharacterData(res.data); // 데이터 상태 업데이트
+      setCharacterData(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -41,54 +41,41 @@ function Board() {
 
   // 필터링: ItemAvgLevel이 1370.00 이하인 객체 제거
   const filteredData = characterData.filter(item => {
-    // item과 ItemAvgLevel이 존재하는지 확인
     if (!item || !item.ItemAvgLevel) return false;
-
     const itemLevel = parseFloat(item.ItemAvgLevel.replace(/,/g, ""));
-    itemLevelArr.push(itemLevel); // itemLevel 값 저장
-    return itemLevel >= 1370.00; // 1370.00 이상만 포함
+    itemLevelArr.push(itemLevel);
+    return itemLevel >= 1370.00;
   });
 
   // 정렬: ItemAvgLevel 기준으로 내림차순 정렬
   const sortedData = filteredData.sort((a, b) => {
     const aLevel = parseFloat(a.ItemAvgLevel.replace(/,/g, ""));
     const bLevel = parseFloat(b.ItemAvgLevel.replace(/,/g, ""));
-    return bLevel - aLevel; // 내림차순
+    return bLevel - aLevel;
   });
 
-  // itemLevelArr 내림차순 정렬
-  itemLevelArr.sort(function (a, b) {
-    return b - a;
-  });
+  itemLevelArr.sort((a, b) => b - a);
 
   const filterRaidByItemLevel = [];
   let filteredRaidName = [];
 
-  // 아이템 레벨에 따른 입장 가능 레이드 필터링
   for (let i = 0; i < itemLevelArr.length; i++) {
-    let filterRaid = Raid.filter(item => {
-      const raidItemLevel = item.RaidItemLevel
-      return raidItemLevel <= itemLevelArr[i];
-    });
+    let filterRaid = Raid.filter(item => item.RaidItemLevel <= itemLevelArr[i]);
     filterRaidByItemLevel.push(filterRaid);
-    let arr = []
-    for (let j = 0; j < filterRaidByItemLevel[i].length; j++) {
-      arr.push(filterRaidByItemLevel[i][j].RaidName)
-    }
-    arr = new Set(arr)
-    arr = Array.from(arr)
-    filteredRaidName.push(arr)
+    let arr = filterRaid.map(r => r.RaidName);
+    arr = Array.from(new Set(arr));
+    filteredRaidName.push(arr);
   }
 
-  const [selectValues, setSelectValues] = useState({}); // select 값 관리
-  const [tierMaterialSwitch, setTierMaterialSwitch] = useState(true); // 티어별 재료 보기 스위치 관리
-  const [raidAndDiff, setRaidAndDiff] = useState({}); // raidName : difficulty 상태 관리
+  const [selectValues, setSelectValues] = useState({});
+  const [tierMaterialSwitch, setTierMaterialSwitch] = useState(true);
+  const [lastChangedRaid, setLastChangedRaid] = useState(null); // { characterIndex, raidName, difficulty, isChecked, type }
   const [goldCheckboxes, setGoldCheckboxes] = useState(() =>
     sortedData.reduce((acc, _, characterIndex) => {
-      acc[characterIndex] = {}; // 초기값을 빈 객체로 설정
+      acc[characterIndex] = {};
       return acc;
     }, {})
-  ); // 골드 체크박스 상태 관리
+  );
   const [checkedValues, setCheckedValues] = useState(() =>
     sortedData.reduce((acc, _, characterIndex) => {
       acc[characterIndex] = filteredRaidName[characterIndex].reduce((raidAcc, _, raidIndex) => {
@@ -97,7 +84,7 @@ function Board() {
       }, {});
       return acc;
     }, {})
-  ); // 레이드 클리어 체크박스 상태 관리
+  );
   const [additionalCheckedValues, setAdditionalCheckedValues] = useState(() =>
     sortedData.reduce((acc, _, characterIndex) => {
       acc[characterIndex] = filteredRaidName[characterIndex].reduce((raidAcc, _, raidIndex) => {
@@ -106,90 +93,80 @@ function Board() {
       }, {});
       return acc;
     }, {})
-  ); // 더보기 체크박스 상태 관리
+  );
   const [showAll, setShowAll] = useState(() =>
     sortedData.reduce((acc, _, characterIndex) => {
-      acc[characterIndex] = false; // 각 캐릭터의 초기 상태는 '접어두기'
+      acc[characterIndex] = false;
       return acc;
     }, {})
-  ); // 레이드 전체 보기 / 축소 보기 상태 관리
+  );
+
   const groupMapping = {
     "카멘": ["카멘 1-3관문", "카멘 4관문"],
     "아브렐슈드": ["아브렐슈드 1-2관문", "아브렐슈드 3관문", "아브렐슈드 4관문"],
-  }; // 특수 레이드 그룹(카멘, 아브렐슈드) 관리
-
-  // 첫 번째 값 가져오기
-  const getDefaultDifficulty = (raidName, characterIndex, raidIndex) => {
-    let num = filterRaidByItemLevel[characterIndex].findIndex((x) => x.RaidName === raidName)
-    const difficulties = filterRaidByItemLevel[characterIndex][num].RaidDifficulty || [];
-    return difficulties || ''; // 첫 번째 값 또는 빈 문자열 반환
   };
 
-  // select 값 변경 핸들러
+  const getDefaultDifficulty = (raidName, characterIndex) => {
+    const num = filterRaidByItemLevel[characterIndex].findIndex((x) => x.RaidName === raidName);
+    return filterRaidByItemLevel[characterIndex][num]?.RaidDifficulty || '';
+  };
+
   const handleSelectChange = (e, characterIndex, raidIndex) => {
-    const newValue = e.target.value;
     setSelectValues((prev) => ({
       ...prev,
-      [`${characterIndex}-${raidIndex}`]: newValue, // 고유 키로 상태 저장
+      [`${characterIndex}-${raidIndex}`]: e.target.value,
     }));
   };
 
-  // 티어별 재료 보기 스위치 핸들러
   const handleTierMaterialSwitch = (event) => {
-    setTierMaterialSwitch(event.target.checked)
-  }
-  // 체크박스 함수 통합 핸들러
-  const handleCheckboxChangeGeneric = (e, characterIndex, raidIndex, stateSetter) => {
-    const isChecked = e.target.checked;
+    setTierMaterialSwitch(event.target.checked);
+  };
 
+  // 체크박스 함수 통합 핸들러 - type: 'clear' | 'gold' | 'additional'
+  const handleCheckboxChangeGeneric = (e, characterIndex, raidIndex, stateSetter, type) => {
+    const isChecked = e.target.checked;
     const raidName = filteredRaidName[characterIndex][raidIndex];
     const difficulty =
       selectValues[`${characterIndex}-${raidIndex}`] ||
-      getDefaultDifficulty(raidName, characterIndex, raidIndex);
+      getDefaultDifficulty(raidName, characterIndex);
 
-    stateSetter((prevState) => {
-      const updatedCheckedValues = {
-        ...prevState,
-        [characterIndex]: {
-          ...prevState[characterIndex],
-          [raidIndex]: isChecked,
-        },
-      };
+    // Material에 변경 이벤트 전달
+    setLastChangedRaid({ characterIndex, raidName, difficulty, isChecked, type });
 
-      // `raidAndDiff` 업데이트
-      setRaidAndDiff({ [raidName]: difficulty });
-
-      return updatedCheckedValues;
-    });
-
+    stateSetter((prevState) => ({
+      ...prevState,
+      [characterIndex]: {
+        ...prevState[characterIndex],
+        [raidIndex]: isChecked,
+      },
+    }));
   };
 
-  // 레이드 클리어 체크박스 함수
+  // 레이드 클리어 체크박스
   const handleCheckboxChange = (e, characterIndex, raidIndex) => {
-    handleCheckboxChangeGeneric(e, characterIndex, raidIndex, setCheckedValues);
-    if (countSelectedCheckboxes(characterIndex) < 3 && e.target.checked === true) { // 레이드 골드 자동 선택. 골드 체크 개수가 3개 이상일 경우 실행 x
+    handleCheckboxChangeGeneric(e, characterIndex, raidIndex, setCheckedValues, 'clear');
+    if (countSelectedCheckboxes(characterIndex) < 3 && e.target.checked === true) {
       handleGoldCheckboxChange(e, characterIndex, raidIndex);
     } else if (e.target.checked === false) {
       handleGoldCheckboxChange(e, characterIndex, raidIndex);
-      handleAdditionalCheckboxChange(e, characterIndex, raidIndex)
+      handleAdditionalCheckboxChange(e, characterIndex, raidIndex);
     }
   };
 
-  // 골드 체크박스 함수
+  // 골드 체크박스
   const handleGoldCheckboxChange = (e, characterIndex, raidIndex) => {
-    handleCheckboxChangeGeneric(e, characterIndex, raidIndex, setGoldCheckboxes);
+    handleCheckboxChangeGeneric(e, characterIndex, raidIndex, setGoldCheckboxes, 'gold');
   };
 
-  // 더보기 체크박스 함수
+  // 더보기 체크박스
   const handleAdditionalCheckboxChange = (e, characterIndex, raidIndex) => {
-    handleCheckboxChangeGeneric(e, characterIndex, raidIndex, setAdditionalCheckedValues)
-  }
+    handleCheckboxChangeGeneric(e, characterIndex, raidIndex, setAdditionalCheckedValues, 'additional');
+  };
 
-  // 골드 체크박스 관리 함수
+  // 골드 체크박스 개수 관리
   const countSelectedCheckboxes = (characterIndex) => {
     const characterCheckboxes = goldCheckboxes[characterIndex] || {};
 
-    // 그룹 선택 개수 계산
     const groupSelectedCount = Object.keys(groupMapping).reduce((count, groupName) => {
       const group = groupMapping[groupName];
       const isGroupSelected = group.some(
@@ -199,7 +176,6 @@ function Board() {
       return count + (isGroupSelected ? 1 : 0);
     }, 0);
 
-    // 그룹 외 개별 선택 개수 계산
     const individualSelectedCount = Object.entries(characterCheckboxes)
       .filter(([raidIndex, isChecked]) => {
         const raidName = filteredRaidName[characterIndex][raidIndex];
@@ -213,7 +189,6 @@ function Board() {
     return groupSelectedCount + individualSelectedCount;
   };
 
-  // 로딩 상태 처리
   if (characterData.length === 0) {
     return (
       <div className='content'>
@@ -224,7 +199,6 @@ function Board() {
     );
   }
 
-  // 필터링된 데이터가 없는 경우
   if (filteredData.length === 0) {
     return (
       <div className='content'>
@@ -235,31 +209,23 @@ function Board() {
     );
   }
 
-  // 난이도 옵션 가져오기
   const getDifficultyOptions = (raidName, characterIndex) => {
     if (!filterRaidByItemLevel[characterIndex]) return [];
-
-    // 해당 레이드의 모든 난이도 옵션들을 찾기
     const raidOptions = filterRaidByItemLevel[characterIndex]
       .filter(raid => raid.RaidName === raidName)
       .map(raid => raid.RaidDifficulty);
-
-    // 중복 제거하고 정렬 (hard, normal, single 순서)
     const uniqueDifficulties = [...new Set(raidOptions)];
-    const sortOrder = { 'hard': 1, 'normal': 2, 'single': 3 };
-
+    const sortOrder = { 'nightmare': 1, 'hard': 2, 'normal': 3, 'single': 4 };
     return uniqueDifficulties.sort((a, b) => (sortOrder[a] || 999) - (sortOrder[b] || 999));
   };
 
   return (
     <div className='content'>
       <Container maxWidth="xl" className='board-container'>
-        {/* 헤더 영역 */}
         <div className='board-header'>
           <Typography variant="h4" className='board-title'>
             레이드 현황판
           </Typography>
-
           <FormControlLabel
             className='board-switch-container'
             control={
@@ -267,33 +233,20 @@ function Board() {
                 checked={tierMaterialSwitch}
                 onChange={handleTierMaterialSwitch}
                 sx={{
-                  '& .MuiSwitch-switchBase.Mui-checked': {
-                    color: 'var(--primary-gold)',
-                  },
-                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                    backgroundColor: 'var(--primary-gold)',
-                  },
+                  '& .MuiSwitch-switchBase.Mui-checked': { color: 'var(--primary-gold)' },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: 'var(--primary-gold)' },
                 }}
               />
             }
-            label={
-              <Typography className='board-switch-label'>
-                티어에 맞는 재료 보기
-              </Typography>
-            }
+            label={<Typography className='board-switch-label'>티어에 맞는 재료 보기</Typography>}
           />
         </div>
 
-        {/* 캐릭터 목록 */}
         <div className='board-grid'>
           {sortedData.map((characterInfo, characterIndex) => (
             <Fade in={true} timeout={300 + characterIndex * 100} key={characterIndex}>
               <div>
-                <CharacterCard
-                  characterInfo={characterInfo}
-                  characterIndex={characterIndex}
-                >
-                  {/* 레이드 목록 */}
+                <CharacterCard characterInfo={characterInfo} characterIndex={characterIndex}>
                   <div className='raid-list-container'>
                     {filteredRaidName[characterIndex]
                       ?.slice(0, showAll[characterIndex] ? filteredRaidName[characterIndex].length : 5)
@@ -301,21 +254,16 @@ function Board() {
                         const groupName = Object.keys(groupMapping).find((group) =>
                           groupMapping[group].includes(raidName)
                         );
-
                         const isGroupSelected = groupName
                           ? groupMapping[groupName].some((name) =>
-                            goldCheckboxes[characterIndex]?.[
-                            filteredRaidName[characterIndex].indexOf(name)
-                            ]
-                          )
+                              goldCheckboxes[characterIndex]?.[filteredRaidName[characterIndex].indexOf(name)]
+                            )
                           : false;
-
                         const selectedCount = countSelectedCheckboxes(characterIndex);
                         const isGoldDisabled =
                           !goldCheckboxes[characterIndex]?.[raidIndex] &&
                           !isGroupSelected &&
                           selectedCount >= 3;
-
                         const isAdditionalDisabled = !checkedValues[characterIndex]?.[raidIndex];
 
                         return (
@@ -338,16 +286,12 @@ function Board() {
                       })}
                   </div>
 
-                  {/* 더보기/접어두기 버튼 */}
                   {filteredRaidName[characterIndex]?.length > 5 && (
                     <div className='expand-button-container'>
                       <button
                         className='expand-button'
                         onClick={() =>
-                          setShowAll((prev) => ({
-                            ...prev,
-                            [characterIndex]: !prev[characterIndex],
-                          }))
+                          setShowAll((prev) => ({ ...prev, [characterIndex]: !prev[characterIndex] }))
                         }
                       >
                         {showAll[characterIndex] ? "접어두기" : "전체 레이드 보기"}
@@ -355,20 +299,15 @@ function Board() {
                     </div>
                   )}
 
-                  {/* 재료 정보 */}
                   <div className='material-info-container'>
                     <Typography variant="h6" className='material-info-title'>
                       획득 재료
                     </Typography>
                     <Material
                       characterInfo={characterInfo}
-                      checkedValues={checkedValues[characterIndex] || {}}
                       characterIndex={characterIndex}
-                      raidAndDiff={raidAndDiff}
-                      goldCheckboxes={goldCheckboxes[characterIndex] || {}}
-                      additionalCheckedValues={additionalCheckedValues[characterIndex] || {}}
-                      filteredRaidName={filteredRaidName}
                       tierMaterialSwitch={tierMaterialSwitch}
+                      lastChangedRaid={lastChangedRaid}
                     />
                   </div>
                 </CharacterCard>
@@ -378,7 +317,7 @@ function Board() {
         </div>
       </Container>
     </div>
-  )
+  );
 }
 
 export default Board;
